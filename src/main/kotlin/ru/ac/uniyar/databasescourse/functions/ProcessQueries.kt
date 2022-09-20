@@ -18,7 +18,7 @@ private fun createConnection(): Connection {
  * @param formatString String
  */
 @SuppressWarnings("NestedBlockDepth")
-fun sendQueries(query: List<String>, formatString: String = "%s ") {
+fun processQueries(query: List<String>, formatString: String = "%s ") {
     try {
         createConnection().use { conn ->
             try {
