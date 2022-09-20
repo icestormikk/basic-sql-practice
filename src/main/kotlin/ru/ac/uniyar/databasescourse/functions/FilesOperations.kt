@@ -1,9 +1,10 @@
 package ru.ac.uniyar.databasescourse.functions
 
+import de.siegmar.fastcsv.reader.NamedCsvReader
 import ru.ac.uniyar.databasescourse.config.FILE_PATH
-import java.io.File
 import java.io.FileNotFoundException
 import java.util.Locale
+import kotlin.io.path.Path
 
 @SuppressWarnings("MagicNumber")
 object FilesOperations {
@@ -17,22 +18,20 @@ object FilesOperations {
         val resultList = mutableListOf<String>()
 
         try {
-            File(pathname).bufferedReader().forEachLine { line ->
-                val arguments = line.split(Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*\$)"))
-                val oneValue = listOf(
-                    arguments[0], arguments[1], arguments[2],
-                    arguments[3], arguments[4], arguments[5],
-                    if (arguments[6] == "T") 1 else 0
-                ).map { String.format(Locale.ENGLISH, "'%s'", it) }
-
-                resultList.add(
-                    oneValue.joinToString(
-                        separator = ",",
-                        prefix = "(",
-                        postfix = ")",
-                        transform = { value -> value.replace("\"", "") }
+            NamedCsvReader.builder().build(Path(pathname)).forEach { line ->
+                with(resultList) {
+                    add(
+                        line.fields.map { entry ->
+                            if (entry.key == "has_pass")
+                                if (entry.value == "T") "1" else "0"
+                            else String.format(Locale.ENGLISH, "'${entry.value}'")
+                        }.joinToString(
+                            separator = ",",
+                            prefix = "(",
+                            postfix = ")"
+                        )
                     )
-                )
+                }
             }
         } catch (_: FileNotFoundException) {
             println("The specified file was not found: $FILE_PATH")
