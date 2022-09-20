@@ -12,4 +12,5 @@ val URL = String.format(
     HOST, USER, PASSWORD
 )
 
+const val DATABASE_NAME = "userdb"
 const val FILE_PATH = "solutions.csv"

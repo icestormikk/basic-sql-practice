@@ -12,7 +12,7 @@ private fun createConnection(): Connection {
 }
 
 /**
- * Сreates a connection to the database and sends the queries specified in the [query] parameter to it.
+ * Creates a connection to the database and sends the queries specified in the [query] parameter to it.
  * Supports formatted output for all queries in the list.
  * @param query List<String>
  * @param formatString String
