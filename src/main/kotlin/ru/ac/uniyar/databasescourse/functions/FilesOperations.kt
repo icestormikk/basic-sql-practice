@@ -2,7 +2,6 @@ package ru.ac.uniyar.databasescourse.functions
 
 import de.siegmar.fastcsv.reader.NamedCsvReader
 import ru.ac.uniyar.databasescourse.config.FILE_PATH
-import java.io.FileNotFoundException
 import java.util.Locale
 import kotlin.io.path.Path
 
@@ -18,7 +17,7 @@ object FilesOperations {
         val resultList = mutableListOf<String>()
 
         try {
-            NamedCsvReader.builder().build(Path(pathname)).forEach { line ->
+            getNamedCsvReader(pathname).forEach { line ->
                 with(resultList) {
                     add(
                         line.fields.map { entry ->
@@ -33,10 +32,13 @@ object FilesOperations {
                     )
                 }
             }
-        } catch (_: FileNotFoundException) {
+        } catch (_: NullPointerException) {
             println("The specified file was not found: $FILE_PATH")
         }
 
         return resultList
     }
+
+    private fun getNamedCsvReader(pathname: String): NamedCsvReader =
+        NamedCsvReader.builder().build(Path(pathname))
 }
