@@ -1,7 +1,6 @@
 package ru.ac.uniyar.databasescourse.functions
 
 import de.siegmar.fastcsv.reader.NamedCsvReader
-import ru.ac.uniyar.databasescourse.config.FILE_PATH
 import java.util.Locale
 import kotlin.io.path.Path
 
@@ -33,7 +32,7 @@ object FilesOperations {
                 }
             }
         } catch (_: NoSuchFileException) {
-            println("The specified file was not found: $FILE_PATH")
+            println("The specified file was not found: $pathname")
         }
 
         return resultList
