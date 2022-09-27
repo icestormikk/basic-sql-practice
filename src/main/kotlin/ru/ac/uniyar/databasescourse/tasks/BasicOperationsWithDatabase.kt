@@ -2,9 +2,25 @@ package ru.ac.uniyar.databasescourse.tasks
 
 import ru.ac.uniyar.databasescourse.functions.FilesOperations
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
+import java.util.Locale
 
 fun basicOperationsWithDatabase() {
-    val values = FilesOperations.csvLinesToSqlValues("solutions.csv")
+    val values = mutableListOf<String>()
+    FilesOperations.convertCSVLinesToMySQLValues("solutions.csv") {
+        with(values) {
+            add(
+                it.fields.map { entry ->
+                    if (entry.key == "has_pass")
+                        if (entry.value == "T") "1" else "0"
+                    else String.format(Locale.ENGLISH, "'${entry.value}'")
+                }.joinToString(
+                    separator = ",",
+                    prefix = "(",
+                    postfix = ")"
+                )
+            )
+        }
+    }
 
     processQueries(
         listOf(
