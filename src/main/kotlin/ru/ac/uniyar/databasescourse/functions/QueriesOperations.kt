@@ -16,7 +16,7 @@ private fun createConnection(): Connection {
 object QueriesOperations {
     /**
      * Creates a connection to the database and sends the queries specified in the [queries] parameter to it.
-     * The callback parameter allows you to use the result of executing the request for your own purposes
+     * The [callback] parameter allows you to use the result of executing the request for your own purposes
      * (by default, the function displays the result on the screen).
      * @param queries List<String>
      * @param callback Function1<String, Unit>

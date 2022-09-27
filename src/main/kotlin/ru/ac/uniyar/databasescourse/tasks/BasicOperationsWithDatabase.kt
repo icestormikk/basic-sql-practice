@@ -1,12 +1,12 @@
 package ru.ac.uniyar.databasescourse.tasks
 
-import ru.ac.uniyar.databasescourse.functions.FilesOperations
+import ru.ac.uniyar.databasescourse.functions.FilesOperations.convertCSVLinesToMySQLValues
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
 import java.util.Locale
 
 fun basicOperationsWithDatabase() {
     val values = mutableListOf<String>()
-    FilesOperations.convertCSVLinesToMySQLValues("solutions.csv") {
+    convertCSVLinesToMySQLValues("solutions.csv") {
         with(values) {
             add(
                 it.fields.map { entry ->
