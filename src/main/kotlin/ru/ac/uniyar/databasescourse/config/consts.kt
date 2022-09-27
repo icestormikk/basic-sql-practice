@@ -2,9 +2,9 @@ package ru.ac.uniyar.databasescourse.config
 
 import java.util.Locale
 
-val HOST: String = System.getenv("MARIADB_HOST") ?: "HOST"
-val USER: String = System.getenv("MARIADB_USER") ?: "USER"
-val PASSWORD: String = System.getenv("MARIADB_PASSWORD") ?: "PASSWORD"
+val HOST: String = System.getenv("MARIADB_HOST") ?: "DEFAULT_HOST"
+val USER: String = System.getenv("MARIADB_USER") ?: "DEFAULT_USER"
+val PASSWORD: String = System.getenv("MARIADB_PASSWORD") ?: "DEFAULT_PASSWORD"
 
 val URL = String.format(
     Locale.ENGLISH,
@@ -12,5 +12,5 @@ val URL = String.format(
     HOST, USER, PASSWORD
 )
 
-const val DATABASE_NAME = "userdb"
+const val DATABASE_NAME = "PavelJigalovDB"
 const val FILE_PATH = "solutions.csv"

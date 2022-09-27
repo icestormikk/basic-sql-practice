@@ -1,10 +1,11 @@
 package ru.ac.uniyar.databasescourse.tasks
 
+import ru.ac.uniyar.databasescourse.config.FILE_PATH
 import ru.ac.uniyar.databasescourse.functions.FilesOperations
 import ru.ac.uniyar.databasescourse.functions.processQueries
 
 fun basicOperationsWithDatabase() {
-    val values = FilesOperations.csvLinesToSqlValues("solutions.csv")
+    val values = FilesOperations.csvLinesToSqlValues(FILE_PATH)
 
     processQueries(
         listOf(

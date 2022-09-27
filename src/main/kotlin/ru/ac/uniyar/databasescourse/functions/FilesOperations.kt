@@ -32,7 +32,7 @@ object FilesOperations {
                     )
                 }
             }
-        } catch (_: NullPointerException) {
+        } catch (_: NoSuchFileException) {
             println("The specified file was not found: $FILE_PATH")
         }
 
