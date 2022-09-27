@@ -1,5 +1,6 @@
 package ru.ac.uniyar.databasescourse.functions
 
+import ru.ac.uniyar.databasescourse.config.DATABASE_NAME
 import ru.ac.uniyar.databasescourse.config.URL
 import java.sql.Connection
 import java.sql.DriverManager
@@ -12,23 +13,28 @@ private fun createConnection(): Connection {
 }
 
 /**
- * Creates a connection to the database and sends the queries specified in the [query] parameter to it.
+ * Creates a connection to the database and sends the queries specified in the [queries] parameter to it.
  * Supports formatted output for all queries in the list.
- * @param query List<String>
+ * @param queries List<String>
  * @param formatString String
  */
 @SuppressWarnings("NestedBlockDepth")
-fun processQueries(query: List<String>, formatString: String = "%s ") {
+fun processQueries(queries: List<String>, formatString: String = "%s ") {
+    val fullQueriesList = listOf("USE $DATABASE_NAME").plus(queries)
     try {
         createConnection().use { conn ->
             try {
                 conn.createStatement().use { smt ->
                     try {
-                        query.forEach {
+                        fullQueriesList.forEach {
                             smt.executeQuery(it).use { rs ->
                                 while (rs.next()) {
                                     for (colIndex in 1..rs.metaData.columnCount)
-                                        print(String.format(Locale.ENGLISH, formatString, rs.getString(colIndex)))
+                                        print(String.format(
+                                            Locale.ENGLISH,
+                                            formatString,
+                                            rs.getString(colIndex)
+                                        ))
                                     println()
                                 }
                             }
