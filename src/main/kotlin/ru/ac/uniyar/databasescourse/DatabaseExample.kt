@@ -1,6 +1,5 @@
 package ru.ac.uniyar.databasescourse
 
-import ru.ac.uniyar.databasescourse.config.DATABASE_NAME
 import ru.ac.uniyar.databasescourse.functions.FilesOperations
 import ru.ac.uniyar.databasescourse.functions.processQueries
 
@@ -9,7 +8,6 @@ fun main(args: Array<String>) {
     val values = FilesOperations.csvLinesToSqlValues("solutions.csv")
 
     processQueries(listOf(
-        "USE $DATABASE_NAME",
         "SET SQL_SAFE_UPDATES = 0",
         // 1
         "CREATE TABLE IF NOT EXISTS solutions (\n" +
@@ -27,7 +25,6 @@ fun main(args: Array<String>) {
 
     println("Вывод для пункта 3:")
     processQueries(listOf(
-        "USE $DATABASE_NAME",
         // 3
         "SELECT solutions.surname AS \"Student's surname\", solutions.answer " +
                 "AS \"Student's review\" FROM solutions WHERE has_pass = 0;",
@@ -41,7 +38,6 @@ fun main(args: Array<String>) {
 
     println("Вывод для пункта 6:")
     processQueries(listOf(
-        "USE $DATABASE_NAME",
         // 6
         "SELECT solutions.surname AS \"Student's surname\", solutions.card AS \"Card Id\" FROM solutions " +
                 "WHERE score > 2 AND has_pass = 0",
