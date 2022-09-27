@@ -1,8 +1,11 @@
 package ru.ac.uniyar.databasescourse.tasks
 
+import ru.ac.uniyar.databasescourse.functions.FilesOperations
 import ru.ac.uniyar.databasescourse.functions.processQueries
 
-fun basicOperationsWithDatabase(values: List<String>) {
+fun basicOperationsWithDatabase() {
+    val values = FilesOperations.csvLinesToSqlValues("solutions.csv")
+
     processQueries(
         listOf(
             "SET SQL_SAFE_UPDATES = 0",
