@@ -1,41 +1,29 @@
 package ru.ac.uniyar.databasescourse.functions
 
 import de.siegmar.fastcsv.reader.NamedCsvReader
-import java.util.Locale
+import de.siegmar.fastcsv.reader.NamedCsvRow
 import kotlin.io.path.Path
 
 @SuppressWarnings("MagicNumber")
 object FilesOperations {
     /**
-     * Converts strings from a .csv file to values for a mysql database.
+     * Converts strings from the *.csv file located on the pathname path to values suitable
+     * for use in the mysql database, in accordance with the user-defined function.
      * @param pathname String
-     * @return List<String>
+     * @param conversionFunction Function1<NamedCsvRow, Unit>
      */
     @JvmStatic
-    fun csvLinesToSqlValues(pathname: String): List<String> {
-        val resultList = mutableListOf<String>()
-
+    fun convertCSVLinesToMySQLValues(
+        pathname: String,
+        conversionFunction: (NamedCsvRow) -> Unit = {},
+    ) {
         try {
             getNamedCsvReader(pathname).forEach { line ->
-                with(resultList) {
-                    add(
-                        line.fields.map { entry ->
-                            if (entry.key == "has_pass")
-                                if (entry.value == "T") "1" else "0"
-                            else String.format(Locale.ENGLISH, "'${entry.value}'")
-                        }.joinToString(
-                            separator = ",",
-                            prefix = "(",
-                            postfix = ")"
-                        )
-                    )
-                }
+                conversionFunction(line)
             }
         } catch (_: NoSuchFileException) {
             println("The specified file was not found: $pathname")
         }
-
-        return resultList
     }
 
     private fun getNamedCsvReader(pathname: String): NamedCsvReader =
