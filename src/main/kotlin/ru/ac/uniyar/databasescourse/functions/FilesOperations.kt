@@ -7,7 +7,7 @@ import kotlin.io.path.Path
 @SuppressWarnings("MagicNumber")
 object FilesOperations {
     /**
-     * Converts strings from the *.csv file located on the pathname path to values suitable
+     * Converts strings from the *.csv file located on the [pathname] path to values suitable
      * for use in the mysql database, in accordance with the user-defined function.
      * @param pathname String
      * @param conversionFunction Function1<NamedCsvRow, Unit>
