@@ -22,7 +22,10 @@ object QueriesOperations {
      * @param callback Function1<String, Unit>
      */
     @SuppressWarnings("NestedBlockDepth")
-    fun processQueries(queries: List<String>, callback: (ResultSet) -> Unit = defaultCallback()) {
+    fun processQueries(
+        queries: List<String>,
+        callback: (ResultSet) -> Unit = defaultCallback(),
+    ) {
         val fullQueriesList = listOf("USE $DATABASE_NAME").plus(queries)
 
         try {
