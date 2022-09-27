@@ -1,11 +1,10 @@
 package ru.ac.uniyar.databasescourse.tasks
 
-import ru.ac.uniyar.databasescourse.config.FILE_PATH
 import ru.ac.uniyar.databasescourse.functions.FilesOperations
-import ru.ac.uniyar.databasescourse.functions.processQueries
+import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
 
 fun basicOperationsWithDatabase() {
-    val values = FilesOperations.csvLinesToSqlValues(FILE_PATH)
+    val values = FilesOperations.csvLinesToSqlValues("solutions.csv")
 
     processQueries(
         listOf(
@@ -37,7 +36,7 @@ fun basicOperationsWithDatabase() {
             // 5
             "UPDATE solutions SET score = 4.1, review = 'Стулья ломать, действительно, незачем', has_pass = 1 " +
                     "WHERE card = 761805",
-        ), "\t%s "
+        )
     )
 
     println("Вывод для пункта 6:")
@@ -50,6 +49,6 @@ fun basicOperationsWithDatabase() {
             // 7
             "DELETE FROM solutions WHERE has_pass = 0",
             "DROP TABLE solutions"
-        ), "\t%s "
+        )
     )
 }
