@@ -8,7 +8,7 @@ import kotlin.io.path.Path
 object FilesOperations {
     /**
      * Converts strings from the *.csv file located on the [pathname] path to values suitable
-     * for use in the mysql database, in accordance with the user-defined function.
+     * for use in the MySQL database, in accordance with the user-defined function.
      * @param pathname String
      * @param conversionFunction Function1<NamedCsvRow, Unit>
      */
@@ -23,6 +23,8 @@ object FilesOperations {
             }
         } catch (_: NoSuchFileException) {
             println("The specified file was not found: $pathname")
+        } catch (ex: NoSuchElementException) {
+            println(ex.localizedMessage)
         }
     }
 
