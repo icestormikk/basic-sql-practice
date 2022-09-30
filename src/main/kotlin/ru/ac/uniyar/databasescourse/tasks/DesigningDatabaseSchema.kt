@@ -34,10 +34,12 @@ fun databaseSchemaDesign() {
                     "\tsolutionID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,\n" +
                     "    studentID INT NOT NULL,\n" +
                     "    reviewerID INT NOT NULL,\n" +
-                    "    score float NOT NULL DEFAULT 0.0,\n" +
+                    "    score FLOAT NOT NULL DEFAULT 0.0,\n" +
                     "    hasPassed BOOLEAN,\n" +
-                    "    FOREIGN KEY (studentID) REFERENCES students (studentID) ON DELETE CASCADE,\n" +
-                    "    FOREIGN KEY (reviewerID) REFERENCES reviewers (reviewerID) ON DELETE CASCADE\n" +
+                    "    FOREIGN KEY (studentID) REFERENCES students (studentID) ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE,\n" +
+                    "    FOREIGN KEY (reviewerID) REFERENCES reviewers (reviewerID) ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE\n" +
                     ")"
         )
     )
