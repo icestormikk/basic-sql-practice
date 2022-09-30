@@ -19,7 +19,7 @@ object QueriesOperations {
      * The [callback] parameter allows you to use the result of executing the request for your own purposes
      * (by default, the function displays the result on the screen).
      * @param queries List<String>
-     * @param callback Function1<String, Unit>
+     * @param callback Function1<ResultSet, Unit>
      */
     @SuppressWarnings("NestedBlockDepth")
     fun processQueries(
