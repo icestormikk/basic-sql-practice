@@ -14,6 +14,14 @@ private fun createConnection(): Connection {
 }
 
 object QueriesOperations {
+    var totalQueriesCounter = 0
+        private set
+    var successfulQueriesCounter = 0
+        private set
+    var failedQueriesCounter = 0
+        private set
+        get() = totalQueriesCounter - successfulQueriesCounter
+
     /**
      * Creates a connection to the database and sends the queries specified in the [queries] parameter to it.
      * The [callback] parameter allows you to use the result of executing the request for your own purposes
@@ -23,7 +31,7 @@ object QueriesOperations {
      */
     @SuppressWarnings("NestedBlockDepth")
     fun processQueries(
-        queries: List<String>,
+        queries: List<String> = emptyList(),
         callback: (ResultSet) -> Unit = defaultCallback(),
     ) {
         val fullQueriesList = listOf("USE $DATABASE_NAME").plus(queries)
@@ -35,11 +43,15 @@ object QueriesOperations {
                         try {
                             fullQueriesList.forEach {
                                 smt.executeQuery(it).use { rs ->
-                                    while (rs.next())
+                                    totalQueriesCounter++
+                                    while (rs.next()) {
+                                        successfulQueriesCounter++
                                         callback(rs)
+                                    }
                                 }
                             }
                         } catch (ex: SQLException) {
+                            failedQueriesCounter++
                             System.out.printf("Statement execution error: %s\n", ex)
                         }
                     }
