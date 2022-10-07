@@ -1,8 +1,8 @@
 package ru.ac.uniyar.databasescourse
 
-import ru.ac.uniyar.databasescourse.tasks.basicOperationsWithDatabase
+import ru.ac.uniyar.databasescourse.tasks.databaseSchemaDesign
 
-fun main(args: Array<String>) {
+fun main() {
     println("The work has started")
-    basicOperationsWithDatabase()
+    databaseSchemaDesign()
 }
