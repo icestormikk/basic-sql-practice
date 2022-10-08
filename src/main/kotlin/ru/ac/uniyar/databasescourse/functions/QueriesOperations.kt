@@ -60,6 +60,24 @@ object QueriesOperations {
         }
     }
 
+    fun configurePreparedStatement(
+        tableTitle: String,
+        values: Collection<String>,
+    ): PreparedStatement =
+        databaseConnection.prepareStatement(
+            "INSERT INTO $tableTitle (${ values.toSet().joinToString(separator = ",") }) VALUES " +
+                    "(${ CharArray(values.size) {'?'}.joinToString(separator = ",") });"
+        )
+
+    @SuppressWarnings("SwallowedException")
+    fun PreparedStatement.insertToDatabase() {
+        try {
+            executeUpdate()
+        } catch (ex: SQLException) {
+            System.out.printf("Statement execution error: %s\n", ex)
+        }
+    }
+
     /**
      * Default callback for the processQueries function
      * @return (Statement, ResultSet) -> Unit
