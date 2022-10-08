@@ -127,10 +127,10 @@ private fun report() {
     }
 }
 
-private fun NamedCsvRow.convertToSQLValueByFields(
+private fun NamedCsvRow.convertRowFieldValue(
     fieldNamesList: Set<String> = this.fields.keys,
-    mapFunction: (String) -> String = { this.getField(it) },
-) = fieldNamesList.map { fieldName ->
+    mapFunction: (String) -> String = { this.getField(it) }
+): List<String> = fieldNamesList.map { fieldName ->
         mapFunction(fieldName)
     }
 
