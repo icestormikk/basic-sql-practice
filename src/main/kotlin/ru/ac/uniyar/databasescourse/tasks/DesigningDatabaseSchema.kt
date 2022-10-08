@@ -132,9 +132,17 @@ private fun NamedCsvRow.convertToSQLValueByFields(
     mapFunction: (String) -> String = { this.getField(it) },
 ) = fieldNamesList.map { fieldName ->
         mapFunction(fieldName)
-    }.joinToString(
-        prefix = "(",
-        postfix = ")",
-        separator = ", ",
-        transform = { String.format(Locale.ENGLISH, "'$it'") }
-    )
+    }
+
+private fun getDepartmentIdByName(departmentName: String): Int {
+    var departmentId = 1
+
+    processQueries(
+        "SELECT id FROM $DEPARTMENT_TABLE_NAME WHERE reviewerDepartment='$departmentName'"
+    ) { _: Statement, resultSet: ResultSet ->
+        if (resultSet.metaData.columnCount > 0)
+            departmentId = resultSet.getInt(1)
+    }
+
+    return departmentId
+}
