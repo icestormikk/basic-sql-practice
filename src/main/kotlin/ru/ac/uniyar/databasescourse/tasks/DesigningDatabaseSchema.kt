@@ -133,9 +133,9 @@ private fun PreparedStatement.fill(values: Collection<Any>): PreparedStatement {
 }
 
 private fun NamedCsvRow.convertRowFieldValue(
-    fieldNamesList: Set<String> = this.fields.keys,
+    selectedHeaders: Set<String> = this.fields.keys,
     mapFunction: (String) -> String = { this.getField(it) }
-): List<String> = fieldNamesList.map { fieldName ->
+): List<String> = selectedHeaders.map { fieldName ->
         mapFunction(fieldName)
     }
 
