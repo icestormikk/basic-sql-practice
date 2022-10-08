@@ -13,7 +13,7 @@ object FilesOperations {
      * @param conversionFunction Function1<NamedCsvRow, Unit>
      */
     @JvmStatic
-    fun convertCSVLinesToMySQLValues(
+    fun readCSVFilePerLine(
         pathname: String,
         conversionFunction: (NamedCsvRow) -> Unit = {},
     ) {
