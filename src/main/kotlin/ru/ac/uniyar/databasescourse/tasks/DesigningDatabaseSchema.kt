@@ -61,37 +61,46 @@ fun databaseSchemaDesign() {
             REVIEWERS_TABLE_NAME to setOf("reviewerID", "reviewerSurname", "departmentID"),
             SOLUTIONS_TABLE_NAME to setOf("solutionID", "studentID", "reviewerID", "score", "hasPassed")
         )
-    )
-
-    convertCSVLinesToMySQLValues("data.csv") {
-        // 2
-        with(resultMap) {
-            get(STUDENTS_TABLE_NAME)!!.add(
-                it.convertToSQLValueByFields(
-                    setOf("studentID", "studentName", "studentSurname")
-                )
-            )
-            get(REVIEWERS_TABLE_NAME)!!.add(
-                it.convertToSQLValueByFields(
-                    setOf("reviewerID", "reviewerSurname", "reviewerDepartment")
-                )
-            )
-            get(SOLUTIONS_TABLE_NAME)!!.add(
-                it.convertToSQLValueByFields(
-                    setOf("solutionID", "studentID", "reviewerID", "score", "hasPassed")
-                ) { title ->
-                    if (title == "hasPassed")
-                        if (it.getField(title) == "Yes") "1" else "0"
-                    else it.getField(title)
+        
+        tableNameToColumnNames.apply {
+            entries.take(2).forEach { currentTableInfo ->
+                csvRow.convertRowFieldValue(currentTableInfo.value).apply {
+                    addValuesToTableIfNotExist(
+                        informationMap = tableNameAndValues,
+                        currentTable = currentTableInfo,
+                        values = this
+                    )
                 }
-            )
-        }
-    }
+            }
 
-    resultMap.forEach {
-        processQueries(
-            listOf("INSERT INTO ${it.key} VALUES ${it.value.joinToString(separator = ",")}")
-        )
+            entries.first { it.key == REVIEWERS_TABLE_NAME }.also { currentTableInfo ->
+                csvRow.convertRowFieldValue(currentTableInfo.value) { columnTitle ->
+                    if (columnTitle == "departmentID")
+                        "${getDepartmentIdByName(csvRow.getField("reviewerDepartment"))}"
+                    else csvRow.getField(columnTitle)
+                }.apply {
+                    addValuesToTableIfNotExist(
+                        informationMap = tableNameAndValues,
+                        currentTable = currentTableInfo,
+                        values = this
+                    )
+                }
+            }
+
+            entries.last().also { currentTableInfo ->
+                csvRow.convertRowFieldValue(currentTableInfo.value) { columnTitle ->
+                    if (columnTitle == "hasPassed")
+                        if (csvRow.getField(columnTitle).lowercase() == "yes") "1" else "0"
+                    else csvRow.getField(columnTitle)
+                }.apply {
+                    addValuesToTableIfNotExist(
+                        informationMap = tableNameAndValues,
+                        currentTable = currentTableInfo,
+                        values = this
+                    )
+                }
+            }
+        }
     }
 
     report()
