@@ -4,8 +4,10 @@ import ru.ac.uniyar.databasescourse.config.DATABASE_NAME
 import ru.ac.uniyar.databasescourse.config.URL
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
+import java.sql.Statement
 import java.util.*
 
 @Throws(SQLException::class)
@@ -14,14 +16,14 @@ private fun createConnection(): Connection {
 }
 
 object QueriesOperations {
-    var totalQueriesCounter = 0
-        private set
-    var successfulQueriesCounter = 0
-        private set
-    var failedQueriesCounter = 0
-        private set
-        get() = totalQueriesCounter - successfulQueriesCounter
+    private var databaseConnection: Connection = createConnection().also { connection ->
+        connection.createStatement().use { statement ->
+            statement.executeQuery("USE $DATABASE_NAME")
+        }
+    }
 
+    fun closeDatabaseConnection() =
+        databaseConnection.close()
     /**
      * Creates a connection to the database and sends the queries specified in the [queries] parameter to it.
      * The [callback] parameter allows you to use the result of executing the request for your own purposes
@@ -37,7 +39,7 @@ object QueriesOperations {
         val fullQueriesList = listOf("USE $DATABASE_NAME").plus(queries)
 
         try {
-            createConnection().use { conn ->
+            databaseConnection.also { conn ->
                 try {
                     conn.createStatement().use { smt ->
                         try {
