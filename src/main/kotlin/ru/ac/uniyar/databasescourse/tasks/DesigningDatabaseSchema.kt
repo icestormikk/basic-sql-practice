@@ -109,8 +109,16 @@ fun databaseSchemaDesign() {
     closeDatabaseConnection()
 }
 
-    resultMap.keys.reversed().forEach {
-        processQueries(listOf("DROP TABLE $it;"))
+private fun addValuesToTableIfNotExist(
+    informationMap: Map<String, MutableSet<String>>,
+    currentTable: Map.Entry<String, Set<String>>,
+    values: Collection<String>,
+) {
+    val doesNotContainsYet = informationMap[currentTable.key]!!.add(values.joinToString(separator = ","))
+    if (doesNotContainsYet) {
+        currentTable.value.toPreparedStatement(currentTable.key)
+            .fill(values)
+            .insertToDatabase()
     }
 }
 
