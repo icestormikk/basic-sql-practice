@@ -33,27 +33,21 @@ object QueriesOperations {
      */
     @SuppressWarnings("NestedBlockDepth")
     fun processQueries(
-        queries: List<String> = emptyList(),
-        callback: (ResultSet) -> Unit = defaultCallback(),
+        vararg queries: String,
+        callback: (Statement, ResultSet) -> Unit = defaultCallback(),
     ) {
-        val fullQueriesList = listOf("USE $DATABASE_NAME").plus(queries)
-
         try {
             databaseConnection.also { conn ->
                 try {
                     conn.createStatement().use { smt ->
                         try {
-                            fullQueriesList.forEach {
+                            queries.forEach {
                                 smt.executeQuery(it).use { rs ->
-                                    totalQueriesCounter++
-                                    while (rs.next()) {
-                                        successfulQueriesCounter++
-                                        callback(rs)
-                                    }
+                                    while (rs.next())
+                                        callback(smt, rs)
                                 }
                             }
                         } catch (ex: SQLException) {
-                            failedQueriesCounter++
                             System.out.printf("Statement execution error: %s\n", ex)
                         }
                     }
@@ -68,15 +62,19 @@ object QueriesOperations {
 
     /**
      * Default callback for the processQueries function
-     * @return (ResultSet) -> Unit
+     * @return (Statement, ResultSet) -> Unit
      */
-    private fun defaultCallback(): (ResultSet) -> Unit = {
-        for (colIndex in 1..it.metaData.columnCount)
-            print(String.format(
-                Locale.ENGLISH,
-                "\t%s ",
-                it.getString(colIndex)
-            ))
-        println()
-    }
+    private fun defaultCallback(): (Statement, ResultSet) -> Unit =
+        { _: Statement, resultSet: ResultSet ->
+            with (resultSet.metaData.columnCount) {
+                if (this > 0) {
+                    for (colIndex in 1..this) {
+                        print(
+                            String.format(Locale.ENGLISH, "\t%s ", resultSet.getString(colIndex))
+                        )
+                    }
+                    println()
+                }
+            }
+        }
 }
