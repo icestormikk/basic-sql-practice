@@ -1,9 +1,14 @@
 package ru.ac.uniyar.databasescourse.tasks
 
 import de.siegmar.fastcsv.reader.NamedCsvRow
-import ru.ac.uniyar.databasescourse.functions.FilesOperations.convertCSVLinesToMySQLValues
+import ru.ac.uniyar.databasescourse.functions.FilesOperations.readCSVFilePerLine
+import ru.ac.uniyar.databasescourse.functions.QueriesOperations.closeDatabaseConnection
+import ru.ac.uniyar.databasescourse.functions.QueriesOperations.configurePreparedStatement
+import ru.ac.uniyar.databasescourse.functions.QueriesOperations.insertToDatabase
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
-import java.util.Locale
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.Statement
 
 private const val STUDENTS_TABLE_NAME = "students"
 private const val REVIEWERS_TABLE_NAME = "reviewers"
