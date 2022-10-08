@@ -114,17 +114,14 @@ fun databaseSchemaDesign() {
     }
 }
 
-private fun report() {
-    println("Work completed: added ")
-    processQueries(
-        listOf(
-            "SELECT COUNT(*) as 'students' FROM $STUDENTS_TABLE_NAME",
-            "SELECT COUNT(*) as 'reviewers' FROM $REVIEWERS_TABLE_NAME",
-            "SELECT COUNT(*) as 'solutions' FROM $SOLUTIONS_TABLE_NAME"
-        )
-    ) {
-        println("\t${it.getString(1)} ${it.metaData.getColumnLabel(1)}")
+private fun Collection<String>.toPreparedStatement(tableTitle: String): PreparedStatement =
+    configurePreparedStatement(tableTitle, this)
+
+private fun PreparedStatement.fill(values: Collection<Any>): PreparedStatement {
+    values.forEachIndexed { index: Int, value: Any ->
+        this.setString(index + 1, "$value")
     }
+    return this
 }
 
 private fun NamedCsvRow.convertRowFieldValue(
