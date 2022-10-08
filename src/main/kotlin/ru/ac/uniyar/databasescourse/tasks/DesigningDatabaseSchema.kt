@@ -109,6 +109,15 @@ fun databaseSchemaDesign() {
     closeDatabaseConnection()
 }
 
+/**
+ * Based on the information from two objects of the Map type, it sends a request to change a certain table
+ * in the database using a PreparedStatement object.
+ * @param informationMap map with information about the names of tables and the values(in SQL format)
+ * that should be passed in them
+ * @param currentTable a pair of values that contain information about the name of the table and its
+ * corresponding columns in the csv file
+ * @param values collection of values to be filled in with the PreparedStatement object
+ */
 private fun addValuesToTableIfNotExist(
     informationMap: Map<String, MutableSet<String>>,
     currentTable: Map.Entry<String, Set<String>>,
@@ -122,9 +131,21 @@ private fun addValuesToTableIfNotExist(
     }
 }
 
+/**
+ * Converts a collection of strings to an object of type PreparedStatement
+ * with the INSERT command inside.
+ * @receiver Collection<String>
+ * @param tableTitle The name of the table in the database for which the query will be built
+ * @return PreparedStatement
+ */
 private fun Collection<String>.toPreparedStatement(tableTitle: String): PreparedStatement =
     configurePreparedStatement(tableTitle, this)
 
+/**
+ * Fills the passed object of the type PreparedStatement with the values specified in the [values] parameter.
+ * @param values Collection of objects that will be placed inside the PreparedStatement.
+ * @return PreparedStatement
+ */
 private fun PreparedStatement.fill(values: Collection<Any>): PreparedStatement {
     values.forEachIndexed { index: Int, value: Any ->
         this.setString(index + 1, "$value")
@@ -132,6 +153,15 @@ private fun PreparedStatement.fill(values: Collection<Any>): PreparedStatement {
     return this
 }
 
+/**
+ * Uses selected headers from a csv file to compose a set
+ * of header values. It is possible to change the conversion logic
+ * to a function specified by the user.
+ * @receiver NamedCsvRow
+ * @param selectedHeaders set of selected headers
+ * @param mapFunction conversion function (by default: gets the value from the field without conversions)
+ * @return List of values obtained from fields with corresponding headers
+ */
 private fun NamedCsvRow.convertRowFieldValue(
     selectedHeaders: Set<String> = this.fields.keys,
     mapFunction: (String) -> String = { this.getField(it) }
@@ -139,6 +169,12 @@ private fun NamedCsvRow.convertRowFieldValue(
         mapFunction(fieldName)
     }
 
+/**
+ * Obtains the unique identifier of the department by its name by executing a sql query
+ * to the database.
+ * @param departmentName name of the department you are looking for
+ * @return unique identifier of the department
+ */
 private fun getDepartmentIdByName(departmentName: String): Int {
     var departmentId = 1
 
