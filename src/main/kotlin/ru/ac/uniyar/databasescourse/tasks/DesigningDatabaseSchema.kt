@@ -103,7 +103,11 @@ fun databaseSchemaDesign() {
         }
     }
 
-    report()
+    tableNameAndValues.keys.reversed().forEach {
+        processQueries("DROP TABLE $it;")
+    }
+    closeDatabaseConnection()
+}
 
     resultMap.keys.reversed().forEach {
         processQueries(listOf("DROP TABLE $it;"))
