@@ -89,7 +89,7 @@ object QueriesOperations {
     }
 
     /**
-     * Default callback for the processQueries function.
+     * Default callback for the [processQueries] function.
      * @return (Statement, ResultSet) -> Unit
      */
     private fun defaultCallback(): (Statement, ResultSet) -> Unit =
