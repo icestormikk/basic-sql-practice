@@ -1,5 +1,6 @@
 package ru.ac.uniyar.databasescourse
 
+import ru.ac.uniyar.databasescourse.tasks.aggregationOperations
 import ru.ac.uniyar.databasescourse.tasks.databaseSchemaDesign
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
@@ -8,7 +9,8 @@ import kotlin.time.measureTimedValue
 fun main() {
     println("The work has started")
     val duration = measureTimedValue {
-        databaseSchemaDesign()
+        /*databaseSchemaDesign()*/
+        aggregationOperations()
     }
-    println(duration.duration)
+    println("\nTime spent on execution: ${duration.duration}")
 }
