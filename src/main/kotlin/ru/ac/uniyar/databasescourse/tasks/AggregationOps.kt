@@ -12,15 +12,12 @@ import java.sql.Statement
 
 private val studentsList = mutableListOf<Pair<Student, Double>>()
 fun aggregationOperations() {
-    val studentsList =
-        mutableListOf<Map<String, String>>()
-    val reviewersList =
-        mutableListOf<Map<String, String>>()
+    val reviewersList = mutableListOf<Pair<Reviewer, Double>>()
     val reportList =
-        mutableListOf<Triple<String, String, Collection<Double>>>()
+        mutableListOf<Triple<String, Student, Collection<Double>>>()
 
     // 1
-    taskOne(studentsList)
+    taskOne()
     // 2
     taskTwo(reviewersList)
     // 3
@@ -42,7 +39,7 @@ private fun taskThree(reportList: MutableList<Triple<String, String, Collection<
                 with(resultSet) {
                     Triple(
                         getString("reviewerSurname"),
-                        getString("studentID"),
+                        getStudentByID(getInt("studentID")),
                         getString("scores").split(",") as Collection<Double>
                     )
                 }
@@ -58,14 +55,14 @@ private fun taskThree(reportList: MutableList<Triple<String, String, Collection<
                 .forEach { reportNote ->
                     println("Преподаватель: ${reportNote.reviewerSurname}")
                     reportNote.studentAndMarks.forEach {
-                        println("\tИдентификатор студента: ${it.first} <-> Оценки: ${it.second}")
+                        println("\tСтудент: ${it.first.name} ${it.first.surname} <-> Оценки: ${it.second}")
                     }
                 }
         }
     )
 }
 
-private fun taskTwo(reviewersList: MutableList<Map<String, String>>) {
+private fun taskTwo(reviewersList: MutableList<Pair<Reviewer, Double>>) {
     println("Задание 2")
     requestAndReport(
         query = "SELECT $REVIEWERS_TABLE_NAME.*, AVG($SOLUTIONS_TABLE_NAME.score) AS 'average' " +
@@ -77,8 +74,11 @@ private fun taskTwo(reviewersList: MutableList<Map<String, String>>) {
         targetList = reviewersList,
         savingFunction = { _: Statement, resultSet: ResultSet ->
             reviewersList.add(
-                (1..resultSet.metaData.columnCount).associate {
-                    Pair(resultSet.metaData.getColumnLabel(it), resultSet.getString(it))
+                with(resultSet) {
+                    Reviewer(
+                        getInt("reviewerID"),
+                        getString("reviewerSurname")
+                    ) to getDouble("average")
                 }
             )
         },
@@ -86,13 +86,13 @@ private fun taskTwo(reviewersList: MutableList<Map<String, String>>) {
             it.apply {
                 println(
                     with(first()) {
-                        """Преподаватель, ставивший максимальные оценки: ${this["reviewerSurname"]}
-                            |   Средняя оценка: ${this["average"]}
+                        """Преподаватель, ставивший максимальные оценки: ${first.surname}
+                            |   Средняя оценка: $second
                             |""".trimMargin()
                     } +
                     with(last()) {
-                        """Преподаватель, ставивший минимальные оценки: ${this["reviewerSurname"]}
-                    |   Средняя оценка: ${this["average"]}
+                        """Преподаватель, ставивший минимальные оценки: ${first.surname}
+                    |   Средняя оценка: $second
                     |""".trimMargin()
                     }
                 )
@@ -101,7 +101,7 @@ private fun taskTwo(reviewersList: MutableList<Map<String, String>>) {
     )
 }
 
-private fun taskOne(studentsList: MutableList<Map<String, String>>) {
+private fun taskOne() {
     println("Задание 1")
     requestAndReport(
         query = "SELECT score, $STUDENTS_TABLE_NAME.* FROM $STUDENTS_TABLE_NAME " +
@@ -111,8 +111,12 @@ private fun taskOne(studentsList: MutableList<Map<String, String>>) {
         targetList = studentsList,
         savingFunction = { _: Statement, resultSet: ResultSet ->
             studentsList.add(
-                (1..resultSet.metaData.columnCount).associate {
-                    Pair(resultSet.metaData.getColumnLabel(it), resultSet.getString(it))
+                with(resultSet) {
+                    Student(
+                        getInt("studentID"),
+                        getString("studentName"),
+                        getString("studentSurname")
+                    ) to getDouble("score")
                 }
             )
         },
@@ -120,14 +124,14 @@ private fun taskOne(studentsList: MutableList<Map<String, String>>) {
             it.apply {
                 println(
                     with(first()) {
-                        """Студент, получивший максимальную оценку: ${this["studentName"]} ${this["studentSurname"]}
-                            |   Оценка: ${this["score"]}
-                            |""".trimMargin()
+                        """Студент, получивший максимальную оценку: ${first.name} ${first.surname}
+                        |   Оценка: $second
+                        |""".trimMargin()
                     } +
                     with(last()) {
-                        """Студент, получивший минимальную оценку: ${this["studentName"]} ${this["studentSurname"]}
-                    |   Оценка: ${this["score"]}
-                    |""".trimMargin()
+                        """Студент, получивший минимальную оценку: ${first.name} ${first.surname}
+                        |   Оценка: $second
+                        |""".trimMargin()
                     }
                 )
             }
