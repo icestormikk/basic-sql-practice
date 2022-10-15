@@ -27,7 +27,7 @@ fun aggregationOperations() {
 }
 
 private fun taskFour(reportList: MutableList<Triple<String, Student, Collection<Double>>>) {
-    println("Задание 4")
+    println("\nЗадание 4")
     reportList.groupBy { it.second }.forEach { (student, reviewerTriple) ->
         println("Больше всего оценок студенту ${student.name} ${student.surname} поставил преподаватель с фамилией ${
             reviewerTriple.maxBy { reviewerAndMarks ->
@@ -198,4 +198,3 @@ private fun getStudentByID(id: Int): Student {
         studentInfo
     }
 }
-
