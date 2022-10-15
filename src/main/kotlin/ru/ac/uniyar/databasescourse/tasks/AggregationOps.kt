@@ -152,11 +152,21 @@ private fun taskOne() {
     )
 }
 
+/**
+ * Sends a [query] request to the database and processes the request according
+ * to the [savingFunction] function. After processing the request, calls the [reportFunction] function
+ * to perform user output.
+ * @param query request to be sent to the database for processing
+ * @param targetList the collection to which the saving will take place
+ * @param savingFunction a function that performs custom processing of the result
+ * of executing a [query] request
+ * @param reportFunction custom output of the result
+ */
 private fun <T> requestAndReport(
     query: String,
     targetList: T,
     savingFunction: (Statement, ResultSet) -> Unit,
-    reportFunction: (T) -> Unit
+    reportFunction: (T) -> Unit= {}
 ) {
     processQueries(query) { statement: Statement, resultSet: ResultSet ->
         savingFunction(statement, resultSet)
@@ -164,6 +174,11 @@ private fun <T> requestAndReport(
     reportFunction(targetList)
 }
 
+/**
+ * Finds the entity "student" by its unique identifier.
+ * @param id unique identifier of the [Student] entity
+ * @return [Student]
+ */
 private fun getStudentByID(id: Int): Student {
     return studentsList.firstOrNull { it.first.id == id }?.first ?: run {
         lateinit var studentInfo: Student
