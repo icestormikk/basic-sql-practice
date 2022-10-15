@@ -143,3 +143,24 @@ private fun <T> requestAndReport(
     }
     reportFunction(targetList)
 }
+
+private fun getStudentByID(id: Int): Student {
+    return studentsList.firstOrNull { it.first.id == id }?.first ?: run {
+        lateinit var studentInfo: Student
+
+        processQueries(
+            "SELECT studentName, studentSurname FROM students WHERE studentID=$id"
+        ) { _: Statement, resultSet: ResultSet ->
+            with(resultSet) {
+                studentInfo = Student(
+                    id,
+                    getString("studentName"),
+                    getString("studentSurname")
+                )
+            }
+        }
+
+        studentInfo
+    }
+}
+
