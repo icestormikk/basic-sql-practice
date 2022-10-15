@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.ac.uniyar.databasescourse.tasks
 
 import de.siegmar.fastcsv.reader.NamedCsvRow
@@ -6,7 +8,6 @@ import ru.ac.uniyar.databasescourse.config.REVIEWERS_TABLE_NAME
 import ru.ac.uniyar.databasescourse.config.SOLUTIONS_TABLE_NAME
 import ru.ac.uniyar.databasescourse.config.STUDENTS_TABLE_NAME
 import ru.ac.uniyar.databasescourse.functions.FilesOperations.readCSVFilePerLine
-import ru.ac.uniyar.databasescourse.functions.QueriesOperations.closeDatabaseConnection
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.configurePreparedStatement
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.insertToDatabase
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
@@ -105,7 +106,6 @@ fun databaseSchemaDesign() {
     tableNameAndValues.keys.reversed().forEach {
         processQueries("DROP TABLE $it;")
     }
-    closeDatabaseConnection()
 }
 
 /**
