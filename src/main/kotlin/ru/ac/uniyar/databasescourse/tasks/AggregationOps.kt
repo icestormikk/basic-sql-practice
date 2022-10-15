@@ -22,10 +22,23 @@ fun aggregationOperations() {
     taskTwo(reviewersList)
     // 3
     taskThree(reportList)
+    // 4
+    taskFour(reportList)
 }
 
-private fun taskThree(reportList: MutableList<Triple<String, String, Collection<Double>>>) {
-    println("Задача 3")
+private fun taskFour(reportList: MutableList<Triple<String, Student, Collection<Double>>>) {
+    println("Задание 4")
+    reportList.groupBy { it.second }.forEach { (student, reviewerTriple) ->
+        println("Больше всего оценок студенту ${student.name} ${student.surname} поставил преподаватель с фамилией ${
+            reviewerTriple.maxBy { reviewerAndMarks ->
+                reviewerAndMarks.third.size
+            }.first
+        }")
+    }
+}
+
+private fun taskThree(reportList: MutableList<Triple<String, Student, Collection<Double>>>) {
+    println("Задание 3")
     requestAndReport(
         query = "select distinct reviewers.reviewerSurname, solutions.studentID, " +
                 "group_concat(solutions.score) as 'scores'\n" +
