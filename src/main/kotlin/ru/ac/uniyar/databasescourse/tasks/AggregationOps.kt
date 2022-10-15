@@ -3,11 +3,14 @@ package ru.ac.uniyar.databasescourse.tasks
 import ru.ac.uniyar.databasescourse.config.REVIEWERS_TABLE_NAME
 import ru.ac.uniyar.databasescourse.config.SOLUTIONS_TABLE_NAME
 import ru.ac.uniyar.databasescourse.config.STUDENTS_TABLE_NAME
+import ru.ac.uniyar.databasescourse.domain.Reviewer
+import ru.ac.uniyar.databasescourse.domain.Student
 import ru.ac.uniyar.databasescourse.domain.task3.ReportNote
 import ru.ac.uniyar.databasescourse.functions.QueriesOperations.processQueries
 import java.sql.ResultSet
 import java.sql.Statement
 
+private val studentsList = mutableListOf<Pair<Student, Double>>()
 fun aggregationOperations() {
     val studentsList =
         mutableListOf<Map<String, String>>()
