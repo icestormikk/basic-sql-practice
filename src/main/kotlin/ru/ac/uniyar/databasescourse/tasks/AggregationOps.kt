@@ -40,11 +40,11 @@ private fun taskFour(reportList: MutableList<Triple<String, Student, Collection<
 private fun taskThree(reportList: MutableList<Triple<String, Student, Collection<Double>>>) {
     println("Задание 3")
     requestAndReport(
-        query = "select distinct reviewers.reviewerSurname, solutions.studentID, " +
-                "group_concat(solutions.score) as 'scores'\n" +
-                "from reviewers, solutions \n" +
-                "where reviewers.reviewerID = solutions.reviewerID\n" +
-                "group by reviewerSurname, studentID;",
+        query = "SELECT DISTINCT $REVIEWERS_TABLE_NAME.reviewerSurname, $SOLUTIONS_TABLE_NAME.studentID, " +
+                "group_concat($SOLUTIONS_TABLE_NAME.score) AS 'scores'\n" +
+                "FROM $REVIEWERS_TABLE_NAME, $SOLUTIONS_TABLE_NAME \n" +
+                "WHERE $REVIEWERS_TABLE_NAME.reviewerID = $SOLUTIONS_TABLE_NAME.reviewerID\n" +
+                "GROUP BY reviewerSurname, studentID;",
         targetList = reportList,
         savingFunction = { _: Statement, resultSet: ResultSet ->
             @Suppress("UNCHECKED_CAST")
