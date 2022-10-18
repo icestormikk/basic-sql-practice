@@ -162,10 +162,10 @@ private fun taskOne() {
  * of executing a [query] request
  * @param reportFunction custom output of the result
  */
-private fun <T> requestAndReport(
+private inline fun <reified T> requestAndReport(
     query: String,
     targetList: T,
-    savingFunction: (Statement, ResultSet) -> Unit,
+    crossinline savingFunction: (Statement, ResultSet) -> Unit,
     reportFunction: (T) -> Unit= {}
 ) {
     processQueries(query) { statement: Statement, resultSet: ResultSet ->
