@@ -62,10 +62,10 @@ private fun taskThree(reportList: MutableList<Triple<String, Student, Collection
             list.groupBy { triple -> triple.first }
                 .map { entry ->
                     ReportNote(
-                    reviewerSurname = entry.key,
-                    studentAndMarks = entry.value.map { Pair(it.second, it.third) }
-                ) }
-                .forEach { reportNote ->
+                        reviewerSurname = entry.key,
+                        studentAndMarks = entry.value.map { Pair(it.second, it.third) }
+                    )
+                }.forEach { reportNote ->
                     println("Преподаватель: ${reportNote.reviewerSurname}")
                     reportNote.studentAndMarks.forEach {
                         println("\t${it.first.name} ${it.first.surname} <-> " +
