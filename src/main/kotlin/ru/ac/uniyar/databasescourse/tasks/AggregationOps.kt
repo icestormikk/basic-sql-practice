@@ -68,7 +68,9 @@ private fun taskThree(reportList: MutableList<Triple<String, Student, Collection
                 .forEach { reportNote ->
                     println("Преподаватель: ${reportNote.reviewerSurname}")
                     reportNote.studentAndMarks.forEach {
-                        println("\tСтудент: ${it.first.name} ${it.first.surname} <-> Оценки: ${it.second}")
+                        println("\t${it.first.name} ${it.first.surname} <-> " +
+                                it.second.toString().replace(Regex("[\\[\\]']+"), "")
+                        )
                     }
                 }
         }
