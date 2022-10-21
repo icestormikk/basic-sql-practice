@@ -47,7 +47,7 @@ private fun taskThree(reportList: MutableList<Triple<String, Student, Collection
                 "WHERE $REVIEWERS_TABLE_NAME.reviewerID = $SOLUTIONS_TABLE_NAME.reviewerID\n" +
                 "GROUP BY reviewerSurname, studentID;",
         targetList = reportList,
-        savingFunction = { _: Statement, resultSet: ResultSet ->
+        onSave = { _: Statement, resultSet: ResultSet ->
             @Suppress("UNCHECKED_CAST")
             reportList.add(
                 with(resultSet) {
@@ -59,7 +59,7 @@ private fun taskThree(reportList: MutableList<Triple<String, Student, Collection
                 }
             )
         },
-        reportFunction = { list ->
+        onReport = { list ->
             list.groupBy { triple -> triple.first }
                 .map { entry ->
                     ReportNote(
@@ -88,7 +88,7 @@ private fun taskTwo(reviewersList: MutableList<Pair<Reviewer, Double>>) {
                 "GROUP BY reviewerID \n" +
                 "ORDER BY AVG(score) DESC;",
         targetList = reviewersList,
-        savingFunction = { _: Statement, resultSet: ResultSet ->
+        onSave = { _: Statement, resultSet: ResultSet ->
             reviewersList.add(
                 with(resultSet) {
                     Reviewer(
@@ -98,7 +98,7 @@ private fun taskTwo(reviewersList: MutableList<Pair<Reviewer, Double>>) {
                 }
             )
         },
-        reportFunction = {
+        onReport = {
             it.apply {
                 println(
                     with(first()) {
@@ -125,7 +125,7 @@ private fun taskOne() {
                 "ON $SOLUTIONS_TABLE_NAME.studentID = $STUDENTS_TABLE_NAME.studentID " +
                 "ORDER BY $SOLUTIONS_TABLE_NAME.score DESC;",
         targetList = studentsList,
-        savingFunction = { _: Statement, resultSet: ResultSet ->
+        onSave = { _: Statement, resultSet: ResultSet ->
             studentsList.add(
                 with(resultSet) {
                     Student(
@@ -136,7 +136,7 @@ private fun taskOne() {
                 }
             )
         },
-        reportFunction = {
+        onReport = {
             it.apply {
                 println(
                     with(first()) {
@@ -157,24 +157,24 @@ private fun taskOne() {
 
 /**
  * Sends a [query] request to the database and processes the request according
- * to the [savingFunction] function. After processing the request, calls the [reportFunction] function
+ * to the [onSave] function. After processing the request, calls the [onReport] function
  * to perform user output.
  * @param query request to be sent to the database for processing
  * @param targetList the collection to which the saving will take place
- * @param savingFunction a function that performs custom processing of the result
+ * @param onSave a function that performs custom processing of the result
  * of executing a [query] request
- * @param reportFunction custom output of the result
+ * @param onReport custom output of the result
  */
 private inline fun <reified T> requestAndReport(
     query: String,
     targetList: T,
-    crossinline savingFunction: (Statement, ResultSet) -> Unit,
-    reportFunction: (T) -> Unit= {}
+    crossinline onSave: (Statement, ResultSet) -> Unit,
+    onReport: (T) -> Unit= {}
 ) {
     processQueries(query) { statement: Statement, resultSet: ResultSet ->
-        savingFunction(statement, resultSet)
+        onSave(statement, resultSet)
     }
-    reportFunction(targetList)
+    onReport(targetList)
 }
 
 /**
